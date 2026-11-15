@@ -1,0 +1,15 @@
+{
+  "name": "cinebook-root",
+  "version": "1.0.0",
+  "description": "CineBook - Premium Cinema Hall Booking Platform",
+  "scripts": {
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "seed": "npm run seed --prefix server",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
