@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongo:27017/cinebook
+      - JWT_SECRET=cinebook_super_secret_jwt_key_2026_cinematic
+      - JWT_EXPIRES_IN=7d
+    depends_on:
+      - mongo
+    restart: always
+
+  mongo:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+volumes:
+  mongo-data:

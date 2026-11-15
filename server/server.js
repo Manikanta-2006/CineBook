@@ -34,6 +34,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const path = require('path');
+
 // Health Check API
 app.get('/api/health', (req, res) => {
   res.json({
@@ -50,6 +52,19 @@ app.use('/api/theatres', theatreRoutes);
 app.use('/api/shows', showRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Production Static Serving
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  app.get('*', (req, res) => {
+    // Exclude API routes from falling back to index.html
+    if (req.originalUrl.startsWith('/api')) {
+      return res.status(404).json({ success: false, message: 'API route not found' });
+    }
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+  });
+}
 
 // Error Handling Middleware
 app.use(notFound);
