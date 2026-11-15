@@ -16,8 +16,10 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
 
-// Connect to Database
-connectDB();
+// Connect to Database in long-running mode (skip top-level unhandled connect on Vercel)
+if (!process.env.VERCEL) {
+  connectDB();
+}
 
 // HTTP Request Logger
 if (process.env.NODE_ENV !== 'test') {
@@ -42,6 +44,8 @@ app.get('/api/health', (req, res) => {
     status: 'online',
     timestamp: new Date().toISOString(),
     service: 'CineBook Core API',
+    mongoConfigured: !!process.env.MONGODB_URI,
+    mongoState: require('mongoose').connection.readyState,
   });
 });
 
